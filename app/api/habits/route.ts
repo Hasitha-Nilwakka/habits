@@ -4,9 +4,7 @@ import { NextResponse } from "next/server";
 import { createHabitSchema } from "@/lib/validations";
 import { nanoid } from "nanoid";
 import { redis } from "@/lib/redis";
-
-//declare the redis key
-const HABITS_CACHE_KEY = 'cache:habits'
+import { HABITS_CACHE_KEY } from "@/lib/constants";
 
 //fetching habits
 export async function GET() {
@@ -14,11 +12,15 @@ export async function GET() {
         //check if the cache is available and return the cache result
         const cachedhabits = await redis.get(HABITS_CACHE_KEY)
         if (cachedhabits) {
-            return NextResponse.json(cachedhabits)
+            return NextResponse.json(JSON.parse(cachedhabits))
         }
 
         //if no cache fetch from db
-        const habits = await prisma.habit.findMany()
+        const habits = await prisma.habit.findMany({
+            include : {
+                entries : true
+            }
+        })
 
         //set the fetched data redis cache
         await redis.set(HABITS_CACHE_KEY, JSON.stringify(habits), "EX", 3600)

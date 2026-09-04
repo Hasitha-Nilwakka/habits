@@ -1,0 +1,1 @@
+export const HABITS_CACHE_KEY='cache:habits'
