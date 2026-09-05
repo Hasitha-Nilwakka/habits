@@ -6,7 +6,7 @@ export default function HabitCard({habit} : {habit : Habit}) {
     const queryClient = useQueryClient()
     const checkEntry = useMutation<Response, Error, { habitId: string; date: string }>({
         mutationFn : async ({ habitId, date }) => {
-            return await fetch('./api/entries', {
+            return await fetch('/api/entries', {
                 method : 'POST',
                 headers : {
                     'content-type' : 'application/json'
@@ -24,7 +24,7 @@ export default function HabitCard({habit} : {habit : Habit}) {
 
     const removeEntry = useMutation<Response, Error, {entryId : string}>({
         mutationFn : async ({entryId}) => {
-            return await fetch(`./api/entries/${entryId}`, {
+            return await fetch(`/api/entries/${entryId}`, {
                 method : 'DELETE'
             })
         },

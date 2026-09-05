@@ -2,8 +2,11 @@
 import HabitList from "@/components/HabitList"
 import { Habit } from "@/types"
 import { useQuery } from "@tanstack/react-query"
+import { useHabitStore } from "@/lib/store"
+import AddHabitForm from "@/components/AddHabitForm"
 
 export default function Home() {
+  const { isFormOpen, setIsFormOpen } = useHabitStore()
   const {data, isError, isLoading} = useQuery<Habit[]>({
     queryKey : ['habits'],
     queryFn : async () => {
@@ -21,6 +24,18 @@ export default function Home() {
     <div>
       <h1>Habits</h1>
       <HabitList habitList={data ?? []}/>
+      <div>
+        <button
+          onClick={setIsFormOpen}
+        >
+          Add habit
+        </button>
+      </div>
+      <div>
+        {isFormOpen && (
+          <AddHabitForm/>
+        )}
+      </div>
     </div>
   )
 }
